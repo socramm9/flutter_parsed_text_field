@@ -268,7 +268,8 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
       replacement,
     );
 
-    _controller.selection = TextSelection.fromPosition(TextPosition(offset: matcher.indexOfMatch! + replacement.length));
+    _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: matcher.indexOfMatch! + replacement.length));
 
     if (matcher.onSuggestionAdded != null) {
       matcher.onSuggestionAdded!(matcher.trigger, suggestion);
@@ -292,20 +293,41 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
 
           var globalOffset = renderBox.localToGlobal(Offset.zero);
           var size = renderBox.size;
-          var spaceBelow = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom - globalOffset.dy - size.height - 16;
-          var spaceAbove = globalOffset.dy - MediaQuery.of(context).padding.top - kToolbarHeight - 16;
+          var spaceBelow = MediaQuery.of(context).size.height -
+              MediaQuery.of(context).viewInsets.bottom -
+              globalOffset.dy -
+              size.height -
+              16;
+          var spaceAbove = globalOffset.dy -
+              MediaQuery.of(context).padding.top -
+              kToolbarHeight -
+              16;
 
           return Positioned(
             width: size.width,
-            height: widget.suggestionPosition == SuggestionPosition.above ? spaceAbove : spaceBelow,
+            height: widget.suggestionPosition == SuggestionPosition.above
+                ? spaceAbove
+                : spaceBelow,
             child: CompositedTransformFollower(
               link: _layerLink,
-              followerAnchor: widget.suggestionPosition == SuggestionPosition.above ? Alignment.bottomCenter : Alignment.topCenter,
-              targetAnchor: widget.suggestionPosition == SuggestionPosition.above ? Alignment.topCenter : Alignment.bottomCenter,
+              followerAnchor:
+                  widget.suggestionPosition == SuggestionPosition.above
+                      ? Alignment.bottomCenter
+                      : Alignment.topCenter,
+              targetAnchor:
+                  widget.suggestionPosition == SuggestionPosition.above
+                      ? Alignment.topCenter
+                      : Alignment.bottomCenter,
               showWhenUnlinked: false,
-              offset: Offset(0, widget.suggestionPosition == SuggestionPosition.above ? -8 : 8),
+              offset: Offset(
+                  0,
+                  widget.suggestionPosition == SuggestionPosition.above
+                      ? -8
+                      : 8),
               child: Align(
-                alignment: widget.suggestionPosition == SuggestionPosition.above ? Alignment.bottomCenter : Alignment.topCenter,
+                alignment: widget.suggestionPosition == SuggestionPosition.above
+                    ? Alignment.bottomCenter
+                    : Alignment.topCenter,
                 child: Material(
                   elevation: 4,
                   child: ListView.builder(
@@ -323,7 +345,8 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
                       }
 
                       return ListTile(
-                        title: Text('${matcher.trigger}${matcher.displayProp(suggestion)}'),
+                        title: Text(
+                            '${matcher.trigger}${matcher.displayProp(suggestion)}'),
                         onTap: () => applySuggestion(
                           matcher: matcher,
                           suggestion: suggestion,
@@ -360,7 +383,8 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
       var lengthOfMatch = token.length;
 
       if (token.isNotEmpty) {
-        final matchers = widget.matchers.where((matcher) => matcher.trigger == token[0]);
+        final matchers =
+            widget.matchers.where((matcher) => matcher.trigger == token[0]);
 
         if (matchers.length > 1) {
           throw 'Multiple matchers match $token';
@@ -370,29 +394,40 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
           final search = token.substring(1);
           final matcher = matchers.first;
 
-          var matchedSuggestions = matcher.suggestions.where((e) {
+          var matchedSuggestions = matcher.getSuggestions(
+                  search) /*.where((e) {
             switch (matcher.searchStyle) {
               case MatcherSearchStyle.startsWith:
                 return matcher.displayProp(e).startsWith(search);
               case MatcherSearchStyle.contains:
                 return matcher.displayProp(e).contains(search);
               case MatcherSearchStyle.iStartsWith:
-                return matcher.displayProp(e).toLowerCase().startsWith(search.toLowerCase());
+                return matcher
+                    .displayProp(e)
+                    .toLowerCase()
+                    .startsWith(search.toLowerCase());
               case MatcherSearchStyle.iContains:
-                return matcher.displayProp(e).toLowerCase().contains(search.toLowerCase());
+                return matcher
+                    .displayProp(e)
+                    .toLowerCase()
+                    .contains(search.toLowerCase());
             }
-          }).toList();
+          }).toList()*/
+              ;
 
           if (matcher.resultSort != null) {
-            matchedSuggestions.sort((a, b) => matcher.resultSort!(search, a, b));
+            matchedSuggestions
+                .sort((a, b) => matcher.resultSort!(search, a, b));
           }
 
           if (widget.suggestionLimit != null) {
-            matchedSuggestions = matchedSuggestions.take(widget.suggestionLimit!).toList();
+            matchedSuggestions =
+                matchedSuggestions.take(widget.suggestionLimit!).toList();
           }
 
           if (matcher.finalResultSort != null) {
-            matchedSuggestions.sort((a, b) => matcher.finalResultSort!(search, a, b));
+            matchedSuggestions
+                .sort((a, b) => matcher.finalResultSort!(search, a, b));
           }
 
           matcher.indexOfMatch = indexOfMatch;
@@ -451,7 +486,9 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    context.watch<SuggestionApplier?>()?.removeListener(_applySuggestionListener);
+    context
+        .watch<SuggestionApplier?>()
+        ?.removeListener(_applySuggestionListener);
     context.watch<SuggestionApplier?>()?.addListener(_applySuggestionListener);
   }
 

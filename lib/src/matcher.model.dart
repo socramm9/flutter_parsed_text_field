@@ -3,10 +3,13 @@ part of flutter_parsed_text_field;
 enum MatcherSearchStyle {
   /// does suggestion start with search criteria, case-sensitive
   startsWith,
+
   /// does suggestion contain the search criteria, case-sensitive
   contains,
+
   /// does suggestion start with search criteria, case-insensitive
   iStartsWith,
+
   /// does suggestion contain the search criteria, case-isensitive
   iContains,
 }
@@ -16,7 +19,9 @@ class Matcher<T> {
   final String trigger;
 
   /// A list of objects that should be used to populate the suggestions popup
-  final List<T> suggestions;
+  final List<T> Function(String? search) getSuggestions;
+
+  List<T> suggestions = [];
 
   /// A function to return the id of the suggestion.
   ///
@@ -87,7 +92,7 @@ class Matcher<T> {
   /// what those [suggestions] are, and how they are used.
   Matcher({
     required this.trigger,
-    required this.suggestions,
+    required this.getSuggestions,
     required this.idProp,
     required this.displayProp,
     this.searchStyle = MatcherSearchStyle.iContains,
@@ -104,10 +109,17 @@ class Matcher<T> {
 
   Type typeOf() => T;
 
+  void reloadSuggestions(String? search) {
+    suggestions = getSuggestions(search);
+  }
+
   String get regexPattern {
     final regexes = [
       if (alwaysHighlight) '[A-Za-z0-9]+',
-      ...suggestions.map(displayProp).map((s) => RegExp.escape(s)).sortedDescending(),
+      ...suggestions
+          .map(displayProp)
+          .map((s) => RegExp.escape(s))
+          .sortedDescending(),
     ].map((s) => '$trigger$s');
 
     return regexes.isEmpty ? '' : '(${regexes.join('|')})';

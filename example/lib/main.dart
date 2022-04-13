@@ -64,15 +64,21 @@ class _MyHomePageState extends State<MyHomePage> {
               suggestionMatches: (matcher, suggestions) {},
               disableSuggestionOverlay: false,
               suggestionLimit: 5,
-              focusNode: ,
+              //focusNode: ,
               matchers: [
                 Matcher<Avenger>(
                   trigger: "@",
-                  suggestions: [
+                  getSuggestions: (search) => [
                     Avenger(userId: '3000', displayName: 'Ironman'),
                     Avenger(userId: '4000', displayName: 'Hulk'),
                     Avenger(userId: '5000', displayName: 'Black Widow'),
-                  ],
+                  ]
+                      .where((element) => search == null
+                          ? true
+                          : element.displayName
+                              .toLowerCase()
+                              .contains(search.toLowerCase()))
+                      .toList(),
                   idProp: (avenger) => avenger.userId,
                   displayProp: (avenger) => avenger.displayName,
                   style: const TextStyle(color: Colors.red),
@@ -96,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     setState(() => addedAvenger = avenger.displayName);
                   },
                 ),
-                Matcher<String>(
+                /*Matcher<String>(
                   trigger: "#",
                   suggestions: ['BattleOfNewYork', 'InfinityGauntlet'],
                   idProp: (hashtag) => hashtag,
@@ -106,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   alwaysHighlight: true,
                   parseRegExp: RegExp(r'(#([\w]+))'),
                   parse: (regex, hashtagString) => hashtagString,
-                ),
+                ),*/
               ],
             ),
             TextButton(

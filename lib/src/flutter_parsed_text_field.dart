@@ -370,7 +370,7 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
     _suggestionOverlay = null;
   }
 
-  void _suggestionListener() {
+  void _suggestionListener() async {
     final cursorPos = _controller.selection.baseOffset;
 
     if (cursorPos > 0) {
@@ -394,8 +394,9 @@ class FlutterParsedTextFieldState extends State<FlutterParsedTextField> {
           final search = token.substring(1);
           final matcher = matchers.first;
 
-          var matchedSuggestions = matcher.getSuggestions(
-                  search) /*.where((e) {
+          await matcher.reloadSuggestions(search);
+          var matchedSuggestions = matcher
+                  .suggestions /*.where((e) {
             switch (matcher.searchStyle) {
               case MatcherSearchStyle.startsWith:
                 return matcher.displayProp(e).startsWith(search);

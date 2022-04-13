@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
               matchers: [
                 Matcher<Avenger>(
                   trigger: "@",
-                  getSuggestions: (search) => [
+                  getSuggestions: (search) async => [
                     Avenger(userId: '3000', displayName: 'Ironman'),
                     Avenger(userId: '4000', displayName: 'Hulk'),
                     Avenger(userId: '5000', displayName: 'Black Widow'),

@@ -19,7 +19,7 @@ class Matcher<T> {
   final String trigger;
 
   /// A list of objects that should be used to populate the suggestions popup
-  final List<T> Function(String? search) getSuggestions;
+  final Future<List<T>> Function(String? search) getSuggestions;
 
   List<T> suggestions = [];
 
@@ -109,8 +109,8 @@ class Matcher<T> {
 
   Type typeOf() => T;
 
-  void reloadSuggestions(String? search) {
-    suggestions = getSuggestions(search);
+  Future reloadSuggestions(String? search) async {
+    suggestions = await getSuggestions(search);
   }
 
   String get regexPattern {

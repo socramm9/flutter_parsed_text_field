@@ -63,6 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: flutterParsedTextFieldController,
               suggestionMatches: (matcher, suggestions) {},
               disableSuggestionOverlay: false,
+              getMentions: () => [],
+              onMentionedRemoved: (id) {},
               suggestionLimit: 5,
               //focusNode: ,
               matchers: [

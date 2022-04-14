@@ -4,9 +4,11 @@ class FlutterParsedTextFieldController extends TextEditingController {
   /// The list of matchers that are to be recognized in this text field
   List<Matcher> matchers = List<Matcher>.empty();
 
-  RegExp get _combinedRegex => RegExp(matchers.map((m) => m.regexPattern).where((e) => e.isNotEmpty).join('|'));
+  RegExp get _combinedRegex => RegExp(
+      matchers.map((m) => m.regexPattern).where((e) => e.isNotEmpty).join('|'));
 
-  RegExp get _combinedParseRegex => RegExp(matchers.map((m) => m.parseRegExp.pattern).join('|'));
+  RegExp get _combinedParseRegex =>
+      RegExp(matchers.map((m) => m.parseRegExp.pattern).join('|'));
 
   FlutterParsedTextFieldController() : super();
 
@@ -24,9 +26,12 @@ class FlutterParsedTextFieldController extends TextEditingController {
       _combinedParseRegex,
       onMatch: (Match match) {
         final fullMatch = match[0]!;
-        final matcher = matchers.firstWhere((m) => m.parseRegExp.hasMatch(fullMatch));
+        final matcher =
+            matchers.firstWhere((m) => m.parseRegExp.hasMatch(fullMatch));
         final parsedMatch = matcher.parse(matcher.parseRegExp, fullMatch);
-        final suggestions = matcher.suggestions.where((s) => matcher.idProp(s) == matcher.idProp(parsedMatch)).toList();
+        final suggestions = matcher.suggestions
+            .where((s) => matcher.idProp(s) == matcher.idProp(parsedMatch))
+            .toList();
 
         if (suggestions.isNotEmpty) {
           assert(suggestions.length == 1);
@@ -55,8 +60,13 @@ class FlutterParsedTextFieldController extends TextEditingController {
       _combinedRegex,
       onMatch: (Match match) {
         final display = match[0]!;
-        final matcher = matchers.firstWhere((m) => m.regexPattern.isNotEmpty && RegExp(m.regexPattern).hasMatch(display));
-        final suggestions = matcher.suggestions.where((e) => '${matcher.trigger}${matcher.displayProp(e)}' == display).toList();
+        final matcher = matchers.firstWhere((m) =>
+            m.regexPattern.isNotEmpty &&
+            RegExp(m.regexPattern).hasMatch(display));
+        final suggestions = matcher.suggestions
+            .where(
+                (e) => '${matcher.trigger}${matcher.displayProp(e)}' == display)
+            .toList();
 
         if (suggestions.isNotEmpty) {
           assert(suggestions.length == 1);
@@ -74,7 +84,10 @@ class FlutterParsedTextFieldController extends TextEditingController {
   }
 
   @override
-  TextSpan buildTextSpan({required BuildContext context, TextStyle? style, required bool withComposing}) {
+  TextSpan buildTextSpan(
+      {required BuildContext context,
+      TextStyle? style,
+      required bool withComposing}) {
     if (matchers.isEmpty) {
       return TextSpan(
         text: text,
@@ -84,10 +97,14 @@ class FlutterParsedTextFieldController extends TextEditingController {
 
     var widgets = List<InlineSpan>.empty(growable: true);
 
+    //Todo: other style for mention: check https://github.com/samuelezedi/linkwell/blob/master/lib/linkwell.dart
+    return TextSpan(style: style, text: text);
+
     text.splitMapJoin(
       _combinedRegex,
       onMatch: (Match match) {
-        final matcher = matchers.firstWhere((m) => RegExp(m.regexPattern).hasMatch(match[0]!));
+        final matcher = matchers
+            .firstWhere((m) => RegExp(m.regexPattern).hasMatch(match[0]!));
 
         widgets.add(
           TextSpan(

@@ -98,7 +98,7 @@ class FlutterParsedTextFieldController extends TextEditingController {
     var widgets = List<InlineSpan>.empty(growable: true);
 
     //Todo: other style for mention: check https://github.com/samuelezedi/linkwell/blob/master/lib/linkwell.dart
-    //return TextSpan(style: style, text: text);
+     return TextSpan(style: style!.merge(matcher.style), text: text);
 
     text.splitMapJoin(
       _combinedRegex,
